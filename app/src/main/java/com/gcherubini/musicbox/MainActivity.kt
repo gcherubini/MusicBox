@@ -4,27 +4,98 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.gcherubini.musicbox.model.Music
+import com.gcherubini.musicbox.navigation.Screen
+import com.gcherubini.musicbox.screens.MusicListScreen
+import com.gcherubini.musicbox.screens.WelcomeScreen
 import com.gcherubini.musicbox.ui.theme.MusicBoxTheme
+
+private val musicsList = listOf(
+    Music(
+        title = "Contact",
+        label = "Sintoniza",
+        releaseDate = "2024-10-12",
+        genre = "Deep Tech",
+        coverImageUrl = "https://i1.sndcdn.com/artworks-Uspv5rImzny7MyXl-egaySw-t1080x1080.png",
+        artist = "Guilherme Cherubini"
+    ),
+    Music(
+        title = "Futuretro",
+        label = "Addiction 21",
+        releaseDate = "2024-11-01",
+        genre = "Electro House",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "create your own heaven",
+        label = "Addiction 21",
+        releaseDate = "2024-11-18",
+        genre = "Deep Tech",
+        coverImageUrl = "https://i1.sndcdn.com/artworks-LAF9qoUAgC9HNsrw-7jYqeg-t1080x1080.jpg",
+        artist = "da lighT"
+    ),
+    Music(
+        title = "Vai Vai",
+        label = "Addiction 21",
+        releaseDate = "2024-12-05",
+        genre = "Minimal / Deep Tech",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Electric X",
+        label = "Addiction 21",
+        releaseDate = "2024-10-25",
+        genre = "Festival Tech House",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Night Frequencies",
+        label = "Lime Distro",
+        releaseDate = "2024-09-28",
+        genre = "Deep House",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Underground Glow",
+        label = "Minimal Drive",
+        releaseDate = "2024-08-15",
+        genre = "Minimal",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Pulse Theory",
+        label = "Groove Core",
+        releaseDate = "2024-09-02",
+        genre = "Tech House",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Low Lights",
+        label = "Addiction 21",
+        releaseDate = "2024-10-01",
+        genre = "Deep / Dub Techno",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    ),
+    Music(
+        title = "Analog Dreams",
+        label = "Lime Distro",
+        releaseDate = "2024-07-22",
+        genre = "Electronica",
+        coverImageUrl = "mock",
+        artist = "n/a"
+    )
+)
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,52 +103,29 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MusicBoxTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    WelcomeScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+
+                // NAV HOST serve para gerenciar telas da aplicação,
+                // abaixo temos as duas primeiras telas WelcomeScreen e MusicListScreen
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Welcome.route
+                ) {
+                    composable(Screen.Welcome.route) {
+                        WelcomeScreen(
+                            onExploreClick = {
+                                navController.navigate(Screen.MusicList.route)
+                            }
+                        )
+                    }
+                    composable(Screen.MusicList.route) {
+                        MusicListScreen(
+                            musicList = musicsList,
+                            navController = navController
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-private const val WELCOME_TEXT = "Welcome to Music Box!"
-private val MarineGreen = Color(0xFF3DDC84)
-
-@Composable
-fun WelcomeScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MarineGreen),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.music_box), // substitua pelo nome correto do seu drawable
-            contentDescription = "Logo do MusicBox",
-            modifier = Modifier.size(120.dp) // ajuste o tamanho como preferir
-        )
-        Spacer(modifier = Modifier.height(16.dp)) // espaço entre imagem e texto
-        Text(
-            text = WELCOME_TEXT,
-            style = MaterialTheme.typography.headlineMedium // pode customizar como quiser
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(onClick = {
-            // Ação ao clicar no botão (ex: navegar para outra tela)
-        }) {
-            Text(text = "Explore")
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MusicBoxTheme {
-        WelcomeScreen()
     }
 }
