@@ -4,17 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.Text
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.gcherubini.musicbox.model.Music
-import com.gcherubini.musicbox.navigation.Screen
+import com.gcherubini.musicbox.screens.navigation.Screen
+import com.gcherubini.musicbox.screens.DetailScreen
 import com.gcherubini.musicbox.screens.MusicListScreen
 import com.gcherubini.musicbox.screens.WelcomeScreen
 import com.gcherubini.musicbox.ui.theme.MusicBoxTheme
 
 private val musicsList = listOf(
     Music(
+        id = "1",
         title = "Contact",
         label = "Sintoniza",
         releaseDate = "2024-10-12",
@@ -23,6 +28,7 @@ private val musicsList = listOf(
         artist = "Guilherme Cherubini"
     ),
     Music(
+        id = "2",
         title = "Futuretro",
         label = "Addiction 21",
         releaseDate = "2024-11-01",
@@ -31,6 +37,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "3",
         title = "create your own heaven",
         label = "Addiction 21",
         releaseDate = "2024-11-18",
@@ -39,6 +46,7 @@ private val musicsList = listOf(
         artist = "da lighT"
     ),
     Music(
+        id = "4",
         title = "Vai Vai",
         label = "Addiction 21",
         releaseDate = "2024-12-05",
@@ -47,6 +55,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "5",
         title = "Electric X",
         label = "Addiction 21",
         releaseDate = "2024-10-25",
@@ -55,6 +64,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "6",
         title = "Night Frequencies",
         label = "Lime Distro",
         releaseDate = "2024-09-28",
@@ -63,6 +73,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "7",
         title = "Underground Glow",
         label = "Minimal Drive",
         releaseDate = "2024-08-15",
@@ -71,6 +82,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "8",
         title = "Pulse Theory",
         label = "Groove Core",
         releaseDate = "2024-09-02",
@@ -79,6 +91,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "9",
         title = "Low Lights",
         label = "Addiction 21",
         releaseDate = "2024-10-01",
@@ -87,6 +100,7 @@ private val musicsList = listOf(
         artist = "n/a"
     ),
     Music(
+        id = "10",
         title = "Analog Dreams",
         label = "Lime Distro",
         releaseDate = "2024-07-22",
@@ -123,6 +137,21 @@ class MainActivity : ComponentActivity() {
                             musicList = musicsList,
                             navController = navController
                         )
+                    }
+                    composable(
+                        route = Screen.MusicDetail.route,
+                        arguments = listOf(navArgument("musicId") { type = NavType.StringType })
+                    ) { backStackEntry ->
+                        val musicId = backStackEntry.arguments?.getString("musicId")
+
+                        val music = musicsList.find { it.id == musicId }
+
+                        if (music != null) {
+                            DetailScreen(
+                                music = music,
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }
