@@ -1,21 +1,19 @@
 package com.gcherubini.musicbox.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,13 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.gcherubini.musicbox.R
 import com.gcherubini.musicbox.model.Music
+import androidx.core.net.toUri
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,8 +40,10 @@ import com.gcherubini.musicbox.model.Music
 fun DetailScreen(
     music: Music,
     modifier: Modifier = Modifier,
-    navController: NavController,
+    navController: NavController
 ) {
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -85,7 +85,17 @@ fun DetailScreen(
             Text(text = "Label: ${music.label}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Genre: ${music.genre}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Release Date: ${music.releaseDate}", style = MaterialTheme.typography.bodySmall)
+
+            music.spotifyTrack?.let {
+                Button(onClick = {
+                    val webIntent = Intent(Intent.ACTION_VIEW, it.toUri())
+                    context.startActivity(webIntent)
+                }) {
+                    Text("Play on Spotify")
+                }
+            }
         }
     }
 }
+
 

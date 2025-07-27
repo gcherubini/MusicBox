@@ -8,4 +8,5 @@ data class Music(
     val releaseDate: String,
     val genre: String,
     val artist: String,
+    val spotifyTrack: String? = null,
 )

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,7 +24,8 @@ private val musicsList = listOf(
         releaseDate = "2024-10-12",
         genre = "Deep Tech",
         coverImageUrl = "https://i1.sndcdn.com/artworks-Uspv5rImzny7MyXl-egaySw-t1080x1080.png",
-        artist = "Guilherme Cherubini"
+        artist = "Guilherme Cherubini",
+        spotifyTrack = "https://open.spotify.com/track/3gXhebY2YvsBHMvR28CVM2?si=75ce53cd1fe44ce0"
     ),
     Music(
         id = "2",
@@ -34,7 +34,7 @@ private val musicsList = listOf(
         releaseDate = "2024-11-01",
         genre = "Electro House",
         coverImageUrl = "mock",
-        artist = "n/a"
+        artist = "n/a",
     ),
     Music(
         id = "3",
@@ -43,7 +43,8 @@ private val musicsList = listOf(
         releaseDate = "2024-11-18",
         genre = "Deep Tech",
         coverImageUrl = "https://i1.sndcdn.com/artworks-LAF9qoUAgC9HNsrw-7jYqeg-t1080x1080.jpg",
-        artist = "da lighT"
+        artist = "da lighT",
+        spotifyTrack = "https://open.spotify.com/track/6JHYRD1ocBipyDBgcMIyTp?si=7b725dbc835f4197"
     ),
     Music(
         id = "4",
@@ -157,4 +158,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }
