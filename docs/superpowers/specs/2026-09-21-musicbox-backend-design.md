@@ -2,7 +2,7 @@
 
 - **Data:** 2026-09-21
 - **Status:** design aprovado em conversa; este documento aguarda revisão do usuário
-- **Projetos envolvidos:** `MusicBox` (app Android, existente) e `MusicBox-backend` (novo, pasta irmã)
+- **Projetos envolvidos:** `MusicBox` (app Android, existente) e `MusicBox-backend` (novo, subpasta do repo — mesmo git)
 
 ---
 

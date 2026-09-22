@@ -34,11 +34,11 @@
 ### Task 1: Backend scaffolding + health check
 
 **Files:**
-- Create: `../MusicBox-backend/settings.gradle.kts`
-- Create: `../MusicBox-backend/build.gradle.kts`
-- Create: `../MusicBox-backend/gradle/libs.versions.toml`
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt`
-- Create: `../MusicBox-backend/.gitignore`
+- Create: `MusicBox-backend/settings.gradle.kts`
+- Create: `MusicBox-backend/build.gradle.kts`
+- Create: `MusicBox-backend/gradle/libs.versions.toml`
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt`
+- Create: `MusicBox-backend/.gitignore`
 
 **Interfaces:**
 - Consumes: nada (primeira task).
@@ -47,7 +47,7 @@
 - [ ] **Step 1: Criar arquivos de build do backend**
 
 ```kotlin
-// ../MusicBox-backend/settings.gradle.kts
+// MusicBox-backend/settings.gradle.kts
 pluginManagement {
     repositories { gradlePluginPortal(); mavenCentral() }
 }
@@ -58,7 +58,7 @@ rootProject.name = "musicbox-backend"
 ```
 
 ```kotlin
-// ../MusicBox-backend/gradle/libs.versions.toml
+// MusicBox-backend/gradle/libs.versions.toml
 [versions]
 kotlin = "2.2.20"
 ktor = "3.5.2"
@@ -86,7 +86,7 @@ application = { id = "application" }
 ```
 
 ```kotlin
-// ../MusicBox-backend/build.gradle.kts
+// MusicBox-backend/build.gradle.kts
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
@@ -109,7 +109,7 @@ dependencies {
 ```
 
 ```
-// ../MusicBox-backend/.gitignore
+// MusicBox-backend/.gitignore
 data/
 .gradle/
 build/
@@ -118,7 +118,7 @@ build/
 - [ ] **Step 2: Criar Application.kt mínimo**
 
 ```kotlin
-// ../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt
+// MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt
 package com.gcherubini.musicbox.backend
 
 import io.ktor.http.HttpStatusCode
@@ -158,25 +158,25 @@ fun Application.module() {
 
 - [ ] **Step 3: Subir e verificar health check**
 
-Run: `cd ../MusicBox-backend && ./gradlew run` (ou `gradlew.bat run` no Windows; se sem wrapper, copiar `gradlew*` + pasta `gradle/` do MusicBox antes)
+Run: `cd MusicBox-backend && ./gradlew run` (ou `gradlew.bat run` no Windows; se sem wrapper, copiar `gradlew*` + pasta `gradle/` do MusicBox antes)
 Expected: log `Responding at http://0.0.0.0:8080`; `curl http://localhost:8080/` → `MusicBox API`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add ../MusicBox-backend
+git add MusicBox-backend
 git commit -m "feat(backend): scaffold Ktor server with health check"
 ```
 
 ### Task 2: Backend model + database + DAO + seed
 
 **Files:**
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/model/Music.kt`
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/Musics.kt`
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/DatabaseFactory.kt`
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/MusicDao.kt`
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/seed/MusicSeeder.kt`
-- Modify: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt` (chamar `DatabaseFactory.init()` no `module()`)
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/model/Music.kt`
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/Musics.kt`
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/DatabaseFactory.kt`
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/database/MusicDao.kt`
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/seed/MusicSeeder.kt`
+- Modify: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt` (chamar `DatabaseFactory.init()` no `module()`)
 
 **Interfaces:**
 - Consumes: `fun Application.module()` da Task 1.
@@ -337,21 +337,21 @@ com.gcherubini.musicbox.backend.database.DatabaseFactory.init()
 
 - [ ] **Step 3: Compilar e conferir seed**
 
-Run: `cd ../MusicBox-backend && ./gradlew compileKotlin && ./gradlew run`
+Run: `cd MusicBox-backend && ./gradlew compileKotlin && ./gradlew run`
 Expected: compila OK; arquivo `data/musicbox.db` criado; `sqlite3 data/musicbox.db "select count(*) from musics;"` → `10`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add ../MusicBox-backend/src
+git add MusicBox-backend/src
 git commit -m "feat(backend): add Music model, Exposed table, DAO and seeder"
 ```
 
 ### Task 3: Backend rotas CRUD + validação
 
 **Files:**
-- Create: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/routes/MusicRoutes.kt`
-- Modify: `../MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt` (registrar `musicRoutes()`)
+- Create: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/routes/MusicRoutes.kt`
+- Modify: `MusicBox-backend/src/main/kotlin/com/gcherubini/musicbox/backend/Application.kt` (registrar `musicRoutes()`)
 
 **Interfaces:**
 - Consumes: `MusicDao` da Task 2.
@@ -446,14 +446,14 @@ Expected: lista 200; item 200; POST vazio → 400 `{"error":...}`; id inexistent
 - [ ] **Step 3: Commit**
 
 ```bash
-git add ../MusicBox-backend/src
+git add MusicBox-backend/src
 git commit -m "feat(backend): add music CRUD routes with validation"
 ```
 
 ### Task 4: Backend testes automatizados
 
 **Files:**
-- Create: `../MusicBox-backend/src/test/kotlin/com/gcherubini/musicbox/backend/MusicRoutesTest.kt`
+- Create: `MusicBox-backend/src/test/kotlin/com/gcherubini/musicbox/backend/MusicRoutesTest.kt`
 
 **Interfaces:**
 - Consumes: `fun Application.module()` + `musicRoutes()`.
@@ -533,13 +533,13 @@ class MusicRoutesTest {
 
 - [ ] **Step 2: Rodar testes**
 
-Run: `cd ../MusicBox-backend && ./gradlew test`
+Run: `cd MusicBox-backend && ./gradlew test`
 Expected: `BUILD SUCCESSFUL`; 4 testes PASS.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add ../MusicBox-backend/src/test
+git add MusicBox-backend/src/test
 git commit -m "test(backend): cover CRUD routes 200/201/204/400/404/409"
 ```
 
