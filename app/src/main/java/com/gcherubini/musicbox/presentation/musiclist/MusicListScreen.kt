@@ -1,9 +1,8 @@
-package com.gcherubini.musicbox.screens
+package com.gcherubini.musicbox.presentation.musiclist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,28 +33,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.gcherubini.musicbox.R
-import com.gcherubini.musicbox.model.Music
-import com.gcherubini.musicbox.viewmodel.MusicViewModel
-import com.gcherubini.musicbox.viewmodel.MusicUiState
+import com.gcherubini.musicbox.presentation.model.MusicUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicListScreen(
-    viewModel: MusicViewModel,
+    viewModel: MusicListViewModel,
     navController: NavController,
 ) {
-    // ✅ Chama apenas uma vez quando a tela for composta
-    LaunchedEffect(Unit) {
-        if (viewModel.uiState.value !is MusicUiState.Success) {
-            viewModel.fetchMusics()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is MusicListEffect.OpenDetail ->
+                    navController.navigate(
+                        com.gcherubini.musicbox.presentation.navigation.Screen.MusicDetail
+                            .createRoute(effect.id)
+                    )
+            }
         }
     }
-
-    val uiState by viewModel.uiState
 
     Scaffold(
         topBar = {
@@ -72,39 +74,34 @@ fun MusicListScreen(
                 }
             )
         }
-
     ) { padding ->
-        when (uiState) {
-            is MusicUiState.Loading -> {
+        when (val s = uiState) {
+            is MusicListUiState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             }
-
-            is MusicUiState.Error -> {
-                val message = (uiState as MusicUiState.Error).message
+            is MusicListUiState.Error -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(message)
+                        Text(s.message)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.fetchMusics() }) {
+                        Button(onClick = { viewModel.onIntent(MusicListIntent.Retry) }) {
                             Text("Tentar novamente")
                         }
                     }
                 }
             }
-
-            is MusicUiState.Success -> {
-                val musics = (uiState as MusicUiState.Success).musics
+            is MusicListUiState.Success -> {
                 LazyColumn(
                     contentPadding = padding,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    items(musics) { music ->
+                    items(s.musics, key = { it.id }) { music ->
                         MusicItem(music) {
-                            navController.navigate("music_detail/${music.id}")
+                            viewModel.onIntent(MusicListIntent.MusicClicked(music.id))
                         }
                     }
                 }
@@ -114,24 +111,24 @@ fun MusicListScreen(
 }
 
 @Composable
-fun MusicItem(music: Music, onClick: () -> Unit) {
+fun MusicItem(music: MusicUiModel, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
-            .clickable { onClick() } // Tornar o item clicável
+            .clickable { onClick() }
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(music.coverImageUrl)
-                .crossfade(true) // anima a troca da imagem
+                .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.loading_image_placeholder), // crie um drawable placeholder
-            error = painterResource(R.drawable.image_not_loaded_placeholder), // drawable para erro no carregamento
+            placeholder = painterResource(R.drawable.loading_image_placeholder),
+            error = painterResource(R.drawable.image_not_loaded_placeholder),
             contentDescription = "Capa do álbum",
             modifier = Modifier
                 .size(80.dp)
-                .clip(RoundedCornerShape(8.dp)) // cantos arredondados
+                .clip(RoundedCornerShape(8.dp))
                 .padding(end = 12.dp)
         )
 

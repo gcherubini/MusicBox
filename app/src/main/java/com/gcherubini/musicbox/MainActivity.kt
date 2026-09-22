@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.remember
+import com.gcherubini.musicbox.di.AppContainer
+import com.gcherubini.musicbox.presentation.navigation.MusicBoxNavHost
 import com.gcherubini.musicbox.ui.theme.MusicBoxTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +15,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MusicBoxTheme {
-                MusicBoxNavHost()
+                val container = remember { AppContainer() }
+                MusicBoxNavHost(container = container)
             }
         }
     }

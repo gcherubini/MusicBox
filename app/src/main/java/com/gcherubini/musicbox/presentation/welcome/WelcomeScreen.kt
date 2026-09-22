@@ -1,4 +1,4 @@
-package com.gcherubini.musicbox.screens
+package com.gcherubini.musicbox.presentation.welcome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,14 +31,14 @@ fun WelcomeScreen(modifier: Modifier = Modifier, onExploreClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.music_box), // substitua pelo nome correto do seu drawable
+            painter = painterResource(id = R.drawable.music_box),
             contentDescription = "Logo do MusicBox",
-            modifier = Modifier.size(120.dp) // ajuste o tamanho como preferir
+            modifier = Modifier.size(120.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp)) // espaço entre imagem e texto
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = WELCOME_TEXT,
-            style = MaterialTheme.typography.headlineMedium // pode customizar como quiser
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(32.dp))
 
