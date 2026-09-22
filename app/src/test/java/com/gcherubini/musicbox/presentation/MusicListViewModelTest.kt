@@ -9,7 +9,6 @@ import com.gcherubini.musicbox.presentation.musiclist.MusicListUiState
 import com.gcherubini.musicbox.presentation.musiclist.MusicListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.Assert.*
@@ -37,8 +36,11 @@ class MusicListViewModelTest {
         }))
         advanceUntilIdle()
         assertTrue(vm.state.value is MusicListUiState.Success)
-        val job = launch { assertEquals("1", (vm.effects.first() as MusicListEffect.OpenDetail).id) }
-        vm.onIntent(MusicListIntent.MusicClicked("1")); advanceUntilIdle(); job.join(); job.cancel()
+        val received = mutableListOf<MusicListEffect>()
+        val job = launch { vm.effects.collect { received += it } }
+        vm.onIntent(MusicListIntent.MusicClicked("1")); advanceUntilIdle()
+        job.cancel()
+        assertEquals(listOf(MusicListEffect.OpenDetail("1")), received)
     }
 
     @Test fun `falha de rede emite Error e Retry recupera`() = runTest {
